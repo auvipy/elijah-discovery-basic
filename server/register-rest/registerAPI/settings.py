@@ -4,7 +4,7 @@ import os
 try:
     from .local import *
 except ImportError as e:
-    #sys.stderr.write("Warning, Failed to import local.py file\n")
+    # sys.stderr.write("Warning, Failed to import local.py file\n")
     pass
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -28,11 +28,11 @@ DATABASES = {
         'OPTIONS': {
             'read_default_file': './mysql.conf',
         },
-        #'NAME': 'cloudlet_registration',                      # Or path to database file if using sqlite3.
-        #'USER': '',                      # Not used with sqlite3.
-        #'PASSWORD': '',                  # Not used with sqlite3.
-        #'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        #'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        # 'NAME': 'cloudlet_registration', # Or path to database file if using sqlite3.
+        # 'USER': '',                      # Not used with sqlite3.
+        # 'PASSWORD': '',                  # Not used with sqlite3.
+        # 'HOST': '', # Set to empty string for localhost.
+        # 'PORT': '', # Set to empty string for default.
     }
 }
 
@@ -62,8 +62,7 @@ USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
-#import warnings
-#warnings.filterwarnings('error', r"DateTimeField received a naive datetime", RuntimeWarning, r'django\.db\.models\.fields')
+
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
