@@ -1,25 +1,21 @@
-import base64
-import datetime
 import ast
-from django.utils.timezone import utc
 from django.utils.timezone import now
-#from django.contrib.auth.models import Group
-#from django.contrib.auth.models import User
+# from django.contrib.auth.models import Group
+# from django.contrib.auth.models import User
 from django.db import models
-from uuid import uuid1
-
+# from uuid import uuid1
 
 
 class Cloudlet(models.Model):
     CLOUDLET_STATUS_RUNNING = 'RUN'
     CLOUDLET_STATUS_TERMINATE = 'TER'
     CLOUDLET_STATUS = (
-            ( CLOUDLET_STATUS_RUNNING, 'Running' ),
-            ( CLOUDLET_STATUS_TERMINATE, 'Terminate' )
+        (CLOUDLET_STATUS_RUNNING, 'Running'),
+        (CLOUDLET_STATUS_TERMINATE, 'Terminate')
     )
-    #user = models.ForeignKey(User)
-    #uuid = models.CharField(max_length=36)
-    #resource_id = models.CharField(max_length=36, primary_key=True, default=lambda :(str(uuid1())))
+    # user = models.ForeignKey(User)
+    # uuid = models.CharField(max_length=36)
+    # resource_id = models.CharField(max_length=36, primary_key=True, default=lambda :(str(uuid1())))
     pub_date = models.DateTimeField(default=now)
     ip_address = models.CharField(max_length=16)
     features = models.CharField(max_length=250)
@@ -29,7 +25,7 @@ class Cloudlet(models.Model):
     mod_time = models.DateTimeField(default=now)
     longitude = models.CharField(max_length=12)
     latitude = models.CharField(max_length=12)
-    #latitude = models.DecimalField(max_digits=10, decimal_places=4)
+    # latitude = models.DecimalField(max_digits=10, decimal_places=4)
     meta = models.CharField(max_length=1024, default='')
 
     def save(self, *args, **kwargs):
