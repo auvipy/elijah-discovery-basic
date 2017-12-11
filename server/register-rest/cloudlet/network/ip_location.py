@@ -86,7 +86,7 @@ class IPLocation(object):
     def ip2location(self, ip_address):
         # get getlocation from http://maxmind.com/
         import pygeoip
-        if self.maxmind_db_path == None or os.path.exists(self.maxmind_db_path) == False:
+        if self.maxmind_db_path is None or os.path.exists(self.maxmind_db_path) is False:
             raise IPGelocationError(
                 "Cannot find maxmind DB at : %s" % self.maxmind_db_path)
         self.gi = pygeoip.GeoIP(self.maxmind_db_path, pygeoip.MEMORY_CACHE)
