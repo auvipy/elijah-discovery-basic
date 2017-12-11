@@ -1,4 +1,4 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python
 #
 # Cloudlet Infrastructure for Mobile Computing
 #
@@ -25,7 +25,7 @@ import multiprocessing
 import time
 import sys
 
-from fuse import FUSE, FuseOSError, Operations
+from fuse import FUSE
 from optparse import OptionParser
 from Queue import Empty
 from fusecache import LoopBack
@@ -47,15 +47,17 @@ def get_instance():
     global _fuse_instance
 
     if _cache_monitor_instance is None:
-        LOG.info("[CACHE] FUSE mount at %s, which is loop back of %s" % \
-                (DiscoveryConst.CLOUDLET_FS_ROOT, DiscoveryConst.DFS_ROOT))
+        LOG.info("[CACHE] FUSE mount at %s, which is loop back of %s" %
+                 (DiscoveryConst.CLOUDLET_FS_ROOT, DiscoveryConst.DFS_ROOT))
         access_queue = Queue()
-        _fuse_instance = FuseLauncher(DiscoveryConst.CLOUDLET_FS_ROOT,\
-                DiscoveryConst.DFS_ROOT, access_queue)
+        _fuse_instance = FuseLauncher(DiscoveryConst.CLOUDLET_FS_ROOT,
+                                      DiscoveryConst.DFS_ROOT, access_queue)
         _fuse_instance.start()
         LOG.info("[CACHE] start Cache monitoring")
-        _cache_monitor_instance = _CacheMonitor(access_queue,\
-                DiscoveryConst.DFS_ROOT, print_out=False)
+        _cache_monitor_instance = _CacheMonitor(
+            access_queue,
+            DiscoveryConst.DFS_ROOT, print_out=False
+        )
         _cache_monitor_instance.start()
     return _cache_monitor_instance
 
@@ -63,7 +65,7 @@ def get_instance():
 def terminate():
     global _cache_monitor_instance
     global _fuse_instance
-    
+
     if _cache_monitor_instance is not None:
         _cache_monitor_instance.terminate()
         _cache_monitor_instance = None
@@ -82,7 +84,7 @@ class _CacheMonitor(threading.Thread):
         self.dfs_root = dfs_root
         self.print_out = print_out
         self.stop = threading.Event()
-        self.cache_info_dict = dict() # inode:cache_status
+        self.cache_info_dict = dict()  # inode:cache_status
         threading.Thread.__init__(self, target=self.process)
 
     def process(self):
@@ -135,7 +137,7 @@ class CmdInterface(threading.Thread):
     def run(self):
         while True:
             user_input = raw_input("> ").lower().strip()
-            
+
             if user_input == "list":
                 print "\n".join(self.cache_monitor.cached_files())
             elif len(user_input) == 0:
@@ -149,7 +151,6 @@ class CmdInterface(threading.Thread):
         pass
 
 
-
 class FuseLauncher(multiprocessing.Process):
     def __init__(self, mountpoint, root, access_queue):
         self.stop = threading.Event()
@@ -159,8 +160,7 @@ class FuseLauncher(multiprocessing.Process):
         if os.path.isdir(self.root) is False or\
                 os.access(self.root, os.R_OK | os.W_OK) is False:
             msg = "Failed to setup cache monitoring at %s\n" % self.root
-            msg += "Please create a directory for the distributed file system at %s\n" %\
-                    self.root
+            msg += "Please create a directory for the distributed file system at %s\n" % self.root
             msg += "Or you can change path to the directory at\n"
             msg += "elijah-discovery/elijah/discovery/Const.py, DFS_ROOT variable"
             raise CacheMonitorError(msg)
@@ -168,7 +168,7 @@ class FuseLauncher(multiprocessing.Process):
                 os.access(self.mountpoint, os.R_OK | os.W_OK) is False:
             msg = "Failed to setup cache monitoring at %s\n" % self.mountpoint
             msg += "Please create a directory for the loopback at %s\n" %\
-                    self.mountpoint
+                self.mountpoint
             msg += "Or you can change path to the directory at\n"
             msg += "elijah-discovery/elijah/discovery/Const.py, "
             msg += "CLOUDLET_FS_ROOT variable"
@@ -176,7 +176,8 @@ class FuseLauncher(multiprocessing.Process):
         multiprocessing.Process.__init__(self)
 
     def run(self):
-        FUSE(LoopBack(self.root, self.access_queue), self.mountpoint, foreground=True)
+        FUSE(LoopBack(self.root, self.access_queue),
+             self.mountpoint, foreground=True)
 
     def terminate(self):
         self.stop.set()
@@ -187,10 +188,12 @@ def process_command_line(argv):
     DESCRIPTION = 'Cache monitor'
 
     parser = OptionParser(usage='%prog [mount_point] [root] [options]',
-            version=VERSION, description=DESCRIPTION)
+                          version=VERSION, description=DESCRIPTION)
     parser.add_option(
-            '-v', '--verbose', action='store_true', dest='print_console', default=False,
-            help="print out access info in realtime")
+        '-v', '--verbose', action='store_true',
+        dest='print_console', default=False,
+        help="print out access info in realtime"
+    )
 
     settings, args = parser.parse_args(argv)
     if len(args) is not 2:
@@ -216,9 +219,9 @@ def main():
     try:
         while True:
             time.sleep(1)
-    except KeyboardInterrupt as e:
+    except KeyboardInterrupt:
         print "User interrupt"
-        ret_code = 1
+
     finally:
         if cache_monitor is not None:
             cache_monitor.terminate()
