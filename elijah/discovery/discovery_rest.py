@@ -2,8 +2,6 @@
 
 import os
 import sys
-import json
-import fnmatch
 import glob2
 
 from flask import Flask
@@ -13,7 +11,6 @@ from flask.ext.restful import Resource
 from flask import jsonify
 from monitor.resource import ResourceMonitor
 from monitor import file_cache
-import log as logging
 
 from config import DiscoveryConst
 from monitor import ResourceConst
@@ -37,7 +34,8 @@ class TmpLogging(object):
         self.err.write("ERROR\t%s\n" % msg)
         self.out.flush()
 
-# Flaks intercept logging class, so we temporarily 
+
+# Flaks intercept logging class, so we temporarily
 # use own class to print log message
 LOG = TmpLogging()
 
@@ -53,7 +51,7 @@ class ResourceInfo(Resource):
         try:
             if self.file_cache_monitor is None:
                 self.file_cache_monitor = file_cache.get_instance()
-        except file_cache.CacheMonitorError as e:
+        except file_cache.CacheMonitorError:
             self.file_cache_monitor = None
         self.dfs_root = DiscoveryConst.DFS_ROOT
 
@@ -71,17 +69,19 @@ class ResourceInfo(Resource):
             cache_files = list()
             cache_score = float(0)
             if self.file_cache_monitor is not None:
-                file_cachelist = app_info.get(AppInfo.REQUIRED_CACHE_FILES, None)
+                file_cachelist = app_info.get(
+                    AppInfo.REQUIRED_CACHE_FILES, None)
                 cache_files, total_filesize, total_cachesize = \
-                        self.check_file_cache(file_cachelist)
+                    self.check_file_cache(file_cachelist)
                 if total_filesize is not 0:
-                    cache_score = float(100.0*total_cachesize/total_filesize)
+                    cache_score = float(
+                        100.0 * total_cachesize / total_filesize)
                 else:
                     cache_score = float(0)
-            ret_data.update({\
-                    ResourceConst.APP_CACHE_FILES: cache_files,
-                    ResourceConst.APP_CACHE_TOTAL_SCORE: cache_score,
-                    })
+            ret_data.update({
+                ResourceConst.APP_CACHE_FILES: cache_files,
+                ResourceConst.APP_CACHE_TOTAL_SCORE: cache_score,
+            })
 
             return jsonify(ret_data)
         else:
@@ -140,7 +140,8 @@ if __name__ == "__main__":
         api = restful.Api(app)
         api.add_resource(ResourceInfo, '/api/v1/resource/')
         # do no turn on debug mode. it make a mess for graceful terminate
-        host = "0.0.0.0"; port = 8022
+        host = "0.0.0.0"
+        port = 8022
         app.run(host=host, port=port, threaded=True, debug=True)
     except KeyboardInterrupt as e:
         ret_code = 1
