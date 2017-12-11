@@ -1,4 +1,4 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python
 #
 # cloudlet infrastructure for mobile computing
 #
@@ -13,26 +13,27 @@
 #
 #   unless required by applicable law or agreed to in writing, software
 #   distributed under the license is distributed on an "as is" basis,
-#   without warranties or conditions of any kind, either express or implied.  
+#   without warranties or conditions of any kind, either express or implied.
 #   see the license for the specific language governing permissions and
 #   limitations under the license.
 #
 
 import os
-import sys
 from elijah.discovery.config import DiscoveryConst as Const
 
-#from setuptools import setup, find_packages
+# from setuptools import setup, find_packages
 from distutils.core import setup
 
-# get all executable file 
+# get all executable file
+
+
 def get_all_files(package_dir, target_path, exclude_names=list()):
     data_files = list()
     cur_dir = os.path.abspath(os.curdir)
     os.chdir(package_dir)
     for (dirpath, dirnames, filenames) in os.walk(target_path):
         for filename in filenames:
-            if filename.startswith('.') == True:
+            if filename.startswith('.') is True:
                 continue
             if filename in exclude_names:
                 continue
@@ -40,33 +41,32 @@ def get_all_files(package_dir, target_path, exclude_names=list()):
     os.chdir(cur_dir)
     return data_files
 
+
 script_files = get_all_files(".", "bin")
 
 setup(
-        name='elijah-discovery',
-        version=str(Const.VERSION),
-        description='Cloudlet registration and discovery',
-        long_description=open('README.md', 'r').read(),
-        url='https://github.com/cmusatyalab/elijah-discovery/',
+    name='elijah-discovery',
+    version=str(Const.VERSION),
+    description='Cloudlet registration and discovery',
+    long_description=open('README.md', 'r').read(),
+    url='https://github.com/cmusatyalab/elijah-discovery/',
 
-        author='Kiryong Ha',
-        author_email='krha@cmu.edu',
-        keywords="cloud cloudlet discovery cmu",
-        license='Apache License Version 2.0',
-        scripts=script_files,
-        packages=[
+    author='Kiryong Ha',
+    author_email='krha@cmu.edu',
+    keywords="cloud cloudlet discovery cmu",
+    license='Apache License Version 2.0',
+    scripts=script_files,
+    packages=[
             'elijah',
             'elijah.discovery',
             'elijah.discovery.client',
             'elijah.discovery.monitor',
-            ],
-        data_files=[],
-        requires=[],
-        #classifier=[
-        #    'Development Status :: 3 - Alpha',
-        #    'License :: OSI Approved :: Apache Software License',
-        #    'Operating System :: POSIX :: Linux',
-        #],
-        )
-
-
+    ],
+    data_files=[],
+    requires=[],
+    # classifier=[
+    #    'Development Status :: 3 - Alpha',
+    #    'License :: OSI Approved :: Apache Software License',
+    #    'Operating System :: POSIX :: Linux',
+    # ],
+)
